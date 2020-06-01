@@ -9,14 +9,15 @@ import ProgressBar from 'progress'
   const width = +args[1] || 512
   const height = +args[2] || 512
   const stepSize = +args[3] || 25
-  const dir = args[4] || './output/'
+  const deviceScaleFactor = +args[4] || 1
+  const dir = args[5] || './output/'
 
   const browser = await puppeteer.launch()
   const page = await browser.newPage()
-  await page.setViewport({ width, height })
+  await page.setViewport({ width, height, deviceScaleFactor })
   await page.goto(url)
   const totalHeight = await page.evaluate(_ => document.body.clientHeight)
-  const files = Math.ceil((totalHeight - height) / stepSize)
+  const files = Math.ceil((totalHeight - height) / stepSize) + 1
   const digits = files.toString().length
 
   const bar = new ProgressBar('downloading [:bar] :percent  :current/:total :etas', {
@@ -26,13 +27,13 @@ import ProgressBar from 'progress'
     total: files
   })
 
-  for (let y = 0; y < totalHeight - height; y += stepSize) {
+  for (let y = 0; y < files; y += 1) {
+    const file = `${new URL(url).hostname}-${(y).toString().padStart(digits, '0')}.png`
+    const path = pathResolve(dir, file)
+    await page.screenshot({ path })
     await page.evaluate(stepSize => {
       window.scrollBy(0, stepSize)
     }, stepSize)
-    const file = `${new URL(url).hostname}-${(y / stepSize).toString().padStart(digits, '0')}.png`
-    const path = pathResolve(dir, file)
-    await page.screenshot({ path })
     bar.tick()
   }
   await browser.close()

@@ -20,5 +20,5 @@ yarn-error.log*
 *.sln
 *.sw?
 
-/output/*.png
-/output.mp4
+/*/*.png
+/*.mp4

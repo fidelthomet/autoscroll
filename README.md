@@ -13,10 +13,10 @@ npm install
 
 run
 ```
-npm run scroll [url] [width] [height] [stepsize] [directory]
+npm run scroll [url] [width] [height] [stepsize] [deviceScaleFactor] [directory]
 ```
 
-all parameters but must be in that order. They default to `https://github.com`, `512`, `512`, `25`, `./output/`. `stepsize` defines how far a page is scrolled between taking screenshots.
+all parameters but must be in that order. They default to `https://github.com`, `512`, `512`, `25`, `1`, `./output/`. `stepsize` defines how far a page is scrolled between taking screenshots.
 
 ## convert to video
 
